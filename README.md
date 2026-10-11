@@ -677,18 +677,119 @@ The following limitations are acknowledged for this prototype:
 
 ---
 
-## 12. Git Commands to Commit Task 3
+---\n
+# Task 4 – Final AI Application (Interactive Web Dashboard)
 
+## 1. Overview & Objectives
+
+In Task 4, the prototype developed across Tasks 1, 2, and 3 is packaged into a complete, beginner-friendly **interactive AI web application** built with Streamlit and Plotly.
+
+The application allows users to:
+1. **Explore the dataset**: Search through 7,109 customer reviews and 1,902 electronics products, viewing sentiment distributions and star ratings.
+2. **Scan products for contradictions**: Select products with high conflict potential, dynamically adjust cosine similarity thresholds, and inspect ranked contradictory review pairs.
+3. **Analyze arbitrary review pairs interactively**: Input any two custom reviews and ratings (or pick from pre-configured benchmark examples) to observe semantic embedding generation, cosine similarity calculation, and rule-based explanations in real-time.
+4. **Evaluate benchmark performance**: Inspect accuracy (72.0%), precision (100.0%), recall (41.7%), and F1-score (58.8%) alongside an interactive confusion matrix.
+5. **Review model methodology**: Read in-depth architectural and mathematical details of `paraphrase-MiniLM-L3-v2` and confidence scoring heuristics.
+
+---
+
+## 2. Technology Stack
+
+- **UI Framework**: Streamlit (`>=1.30.0`)
+- **Visualizations**: Plotly (`>=5.18.0`)
+- **Semantic Embeddings**: `sentence-transformers/paraphrase-MiniLM-L3-v2`
+- **Data Processing**: Pandas, PyArrow, NumPy
+- **Metrics & Linear Algebra**: Scikit-learn
+
+---
+
+## 3. How to Run the Application Locally
+
+### Step 1: Install Dependencies
 ```bash
-# Verify ignored files (dataset and model cache should NOT be staged)
-git status
-
-# Stage all Task 3 changes
-git add src/explainer.py src/evaluate.py src/contradiction.py main.py README.md examples/example_output.json
-
-# Commit
-git commit -m "feat: implement Task 3 intelligent contradiction explanation and ranking"
-
-# Push
-git push origin main
+pip install -r requirements.txt
 ```
+
+### Step 2: Start the Web Dashboard
+```bash
+streamlit run app.py
+```
+The application will automatically start and open in your default browser at:
+`http://localhost:8501`
+
+### Step 3: Run the CLI Evaluation (Task 2 & 3 Support)
+```bash
+python main.py --evaluate
+```
+
+### Step 4: Run CLI Contradiction Pipeline on Dataset
+```bash
+python main.py --threshold 0.55 --top-n 10 --save
+```
+
+---
+
+## 4. Key Features & Dashboard Modules
+
+### 📊 Tab 1: Dataset & Product Explorer
+- Summarizes the **7,109 Amazon electronics reviews** across **1,902 products**.
+- Interactive pie chart of sentiments: Positive (82.3%), Negative (11.1%), Neutral (6.6%).
+- Interactive bar chart of 1–5 star rating distributions.
+- Searchable product table highlighting products with both positive and negative customer reviews.
+
+### ⚡ Tab 2: Batch Contradiction Detector
+- Filter by specific high-conflict products (e.g. Fire TV Stick, Fire Tablet, Echo Dot, Earbuds) or scan the entire dataset.
+- Real-time sliders for **Semantic Similarity Threshold** (0.30 – 0.90), **Max Pairs Per Product**, and **Top N Pairs**.
+- Displays ranked contradictory pairs enriched with confidence tier badges and natural language explanations.
+- One-click **Export to JSON** functionality.
+
+### 🔬 Tab 3: Interactive Pair Analyzer
+- Custom sandbox to compare any two customer reviews and ratings.
+- Quick-load preset test cases covering battery life, sound quality, build quality, connectivity, and non-contradiction scenarios.
+- Instant feedback showing cosine similarity metric, confidence score, verdict, and visual similarity gauge.
+
+### 📈 Tab 4: Evaluation & System Performance
+- Displays benchmark metrics on the 25-item manually labeled evaluation suite.
+- Live interactive Confusion Matrix powered by Plotly heatmap.
+- Dynamic threshold adjustment to observe precision vs. recall trade-offs.
+
+### ℹ️ Tab 5: Architecture & Methodology
+- Complete documentation of the pipeline design, model specifications, polarity heuristics, and acknowledged constraints.
+
+---
+
+## 5. Repository Structure
+
+```
+AI-Based-Product-Review-Contradiction-Detection/
+├── app.py                      # Task 4: Interactive Streamlit web application dashboard
+├── main.py                     # Task 2 & 3: CLI entry point with --evaluate flag
+├── requirements.txt            # Project dependencies (pandas, pyarrow, sentence-transformers, streamlit, plotly)
+├── README.md                   # Full documentation for Tasks 1, 2, 3, and 4
+├── .gitignore                  # Excludes datasets, virtual environments, caches, and secrets
+├── data/
+│   └── train-00000-of-00001.parquet  # Amazon Reviews 2023 Electronics (7,109 rows)
+├── examples/
+│   └── example_output.json     # Saved contradiction pairs in JSON format
+└── src/
+    ├── __init__.py
+    ├── load_data.py            # Local Parquet file loader
+    ├── preprocess.py           # Text cleaning and star-rating to sentiment mapper
+    ├── similarity.py           # paraphrase-MiniLM-L3-v2 embedding & cosine similarity
+    ├── explainer.py            # Task 3: Confidence scoring, ranking, explanations, validation
+    ├── evaluate.py             # Task 3: 25-item labelled evaluation suite & metrics
+    └── contradiction.py        # Core contradiction detection pipeline
+```
+
+---
+
+## 6. Verification and Test Results
+
+| Test / Feature | Command / Interface | Status | Outcome |
+|---|---|---|---|
+| **Streamlit App Launch** | `streamlit run app.py` | ✅ Passed | Web UI successfully initialized at `http://localhost:8501` |
+| **Interactive Pair Analyzer** | Tab 3 in Web UI | ✅ Passed | Accurately distinguishes contradictions from agreement |
+| **Batch Product Scan** | Tab 2 in Web UI | ✅ Passed | Successfully filters conflicting reviews and ranks top pairs |
+| **CLI Evaluation** | `python main.py --evaluate` | ✅ Passed | 72.0% Accuracy, 100% Precision, 41.7% Recall, 58.8% F1 |
+| **CLI Full Pipeline** | `python main.py --threshold 0.60` | ✅ Passed | Identifies top pairs without errors |
+| **Index Alignment Bug Fix** | `src/contradiction.py` | ✅ Fixed | Resolved `IndexError` on subset filtering |

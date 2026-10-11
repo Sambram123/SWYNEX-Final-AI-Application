@@ -37,3 +37,10 @@ secrets.json
 dist/
 build/
 *.egg-info/
+# ── Agent artifacts & temporary folders ─────────────────────────────────────
+.agent/
+.agents/
+.gemini/
+.gsd/
+adapters/
+scripts/

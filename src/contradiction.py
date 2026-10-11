@@ -71,6 +71,8 @@ def detect_contradictions(
           confidence, confidence_label, explanation.
     """
     print(f"[contradiction] Encoding {len(df):,} reviews ...")
+    # Reset index so row positions match embeddings array indices (0 .. len(df)-1)
+    df = df.reset_index(drop=True)
     embeddings = encode_texts(df["review_text"].tolist(), show_progress=True)
 
     results: List[Dict[str, Any]] = []
