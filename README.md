@@ -4,7 +4,7 @@
 
 ### 1. Problem Statement
 
-Online products receive thousands of customer reviews describing different experiences with product features such as battery life, camera quality, performance, price, and build quality.
+Online products receive thousands of customer reviews describing different experiences with product features such as battery life, camera quality, performance, price, build quality.
 
 When reviews contain conflicting opinions about the same product aspect, it can be difficult for consumers and product teams to identify these contradictions manually.
 
@@ -43,7 +43,7 @@ Consumers can identify product aspects where customer experiences vary significa
 Product teams can identify features receiving conflicting customer feedback and investigate potential product issues.
 
 ### E-commerce Analysts
-Analysts can summarize large volumes of customer feedback and identify areas requiring further investigation.
+Analysts can summarize large volumes of feedback and identify areas requiring further investigation.
 
 For this project, the primary focus is on **consumers and product analysts**.
 
